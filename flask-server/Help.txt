@@ -1,0 +1,25 @@
+1. Create a virtual env in this folder
+python -m virtualenv venv
+
+2. Activate Virtual env
+.\venv\scripts\activate
+
+3.Install flask
+pip install flask
+
+4.Run server
+python server.py
+
+5. This will start the backend python server
+
+6. Open page in the browser
+http://localhost:5000/test
+
+7. Should be able to see
+{
+  "test": [
+    "test1", 
+    "test2", 
+    "test3"
+  ]
+}
