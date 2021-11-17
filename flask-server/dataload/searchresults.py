@@ -21,6 +21,11 @@ def __create_master_table(create):
         cursor.close()
         connection.close()
 
+def __insert_master_record(cursor, title, url, rating, reviews, price, search_url):
+    cursor.execute(
+        'INSERT OR REPLACE INTO consumer_products_master (title, url, rating, reviews, price, search_url) VALUES(?, ?, ?, ?, ?, ?)',
+        (title, url, rating, reviews, price, search_url))
+
 
 def scrape(url):  
 
@@ -52,6 +57,7 @@ def scrape(url):
 
 # product_data = []
 connection = db.get_db()
+cursor = connection.cursor()
 __create_master_table(True)
 with open("search_results_urls.txt",'r') as urllist, open('search_results_output.jsonl','w') as outfile:
     for url in urllist.read().splitlines():
@@ -62,6 +68,10 @@ with open("search_results_urls.txt",'r') as urllist, open('search_results_output
                 # print("Saving Product: %s"%product['title'])
                 json.dump(product,outfile)
                 outfile.write("\n")
+                #insert data
+                __insert_master_record(cursor, product['title'], product['url'], product['rating'], product['reviews'], product['price'], product['search_url'])
                 # sleep(5)
+connection.commit()
+cursor.close()
 connection.close()
     
