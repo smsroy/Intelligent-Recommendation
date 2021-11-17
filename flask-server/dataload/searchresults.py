@@ -2,10 +2,25 @@ from selectorlib import Extractor
 import requests 
 import json 
 from time import sleep
+import sqlite3
 
+import DatabaseProvider as db
 
 # Create an Extractor by reading from the YAML file
 e = Extractor.from_yaml_file('search_results.yml')
+
+def __drop_master_table(cursor):
+    cursor.execute('DROP TABLE IF EXISTS consumer_products_master')
+
+def __create_master_table(create):
+    if create:
+        connection = db.get_db()
+        cursor = connection.cursor()
+        __drop_master_table(cursor)
+        cursor.execute('CREATE TABLE consumer_products_master(title TEXT, url TEXT, rating TEXT, reviews INTEGER, price REAL, search_url TEXT)')
+        cursor.close()
+        connection.close()
+
 
 def scrape(url):  
 
@@ -32,12 +47,12 @@ def scrape(url):
         else:
             print("Page %s must have been blocked by Amazon as the status code was %d"%(url,r.status_code))
         return None
-    else:
-        print('Status: ', r.status_code)
     # Pass the HTML of the page and create 
     return e.extract(r.text)
 
 # product_data = []
+connection = db.get_db()
+__create_master_table(True)
 with open("search_results_urls.txt",'r') as urllist, open('search_results_output.jsonl','w') as outfile:
     for url in urllist.read().splitlines():
         data = scrape(url) 
@@ -48,4 +63,5 @@ with open("search_results_urls.txt",'r') as urllist, open('search_results_output
                 json.dump(product,outfile)
                 outfile.write("\n")
                 # sleep(5)
+connection.close()
     
