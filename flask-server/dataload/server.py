@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from SearchResultQuery import SearchResultQuery as srq
 
 app = Flask(__name__)
@@ -13,11 +13,10 @@ def reco():
 def searchResultQuery():
     searchQ = srq()
     result = searchQ.get_master_data()
-    returnString = ''
-    for res in result:
-        returnString = returnString + res['title']+'\n'+ '<br>' + '<br>'
-    return returnString
-
+    searchQ.close()
+    print('result', result)
+    return jsonify({'space': result})
+  
 
 if __name__ == "__main__":
     print ("Starting application")
