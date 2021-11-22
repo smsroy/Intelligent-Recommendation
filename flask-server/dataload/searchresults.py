@@ -70,7 +70,7 @@ with open("search_results_urls.txt",'r') as urllist, open('search_results_output
                 outfile.write("\n")
                 #insert data
                 __insert_master_record(cursor, product['title'], product['url'], product['rating'], product['reviews'], product['price'], product['search_url'])
-                # sleep(5)
+                #sleep(10)
 connection.commit()
 cursor.close()
 connection.close()
