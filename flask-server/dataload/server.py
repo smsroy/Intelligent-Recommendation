@@ -16,6 +16,15 @@ def searchResultQuery():
     searchQ.close()
     print('result', result)
     return jsonify({'space': result})
+
+# Api Route
+@app.route("/search-result-queryarr")
+def searchResultQueryArr():
+    searchQ = srq()
+    result = searchQ.get_master_data_arr()
+    searchQ.close()
+    print('result', result)
+    return result
   
 
 if __name__ == "__main__":

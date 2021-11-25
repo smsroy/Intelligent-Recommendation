@@ -23,3 +23,11 @@ http://localhost:5000/test
     "test3"
   ]
 }
+
+
+For React
+==========
+intel-reco-ui/
+npm install or yarn install
+npm start or yarn start
+npm build or yarn build
