@@ -30,22 +30,25 @@ class SearchResultQuery:
         cursor.close()
         return jsonData_list
 
-    def get_master_data_arr(self):
-        cursor = self.connection.execute('SELECT title, url, rating, reviews, price, search_url FROM consumer_products_master')
+    def get_master_data_arr(self, category):
+        cursor = self.connection.execute('SELECT title, url, rating, reviews, price, search_url, description FROM consumer_products_master WHERE category=\'%s\''
+        % (category))
         result = cursor.fetchall()
-        result_arr = []
-        for row in result:
-            resarr = []
-            resarr.append(row["title"])
-            # resarr.append("<a href='https://amazon.com'" + row["url"] + "'>url</a>")
-            resarr.append(row["rating"])
-            resarr.append(row["reviews"])
-            resarr.append(row["price"])
-            resarr.append("open link")
-            result_arr.append(resarr)
-        print("result_arr",result_arr)
         cursor.close()
-        return json.dumps(result_arr)
+        return result
+        # result_arr = []
+        # for row in result:
+        #     resarr = []
+        #     resarr.append(row["title"])
+        #     # resarr.append("<a href='https://amazon.com'" + row["url"] + "'>url</a>")
+        #     resarr.append(row["rating"])
+        #     resarr.append(row["reviews"])
+        #     resarr.append(row["price"])
+        #     resarr.append("open link")
+        #     result_arr.append(resarr)
+        # print("result_arr",result_arr)
+        # cursor.close()
+        # return json.dumps(result_arr)
 
     def close(self):
         if self.connection is not None:

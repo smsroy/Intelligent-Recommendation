@@ -1,31 +1,38 @@
 from selectorlib import Extractor
+from bs4 import BeautifulSoup 
 import requests 
 import json 
 from time import sleep
-import sqlite3
 
 import DatabaseProvider as db
 
 # Create an Extractor by reading from the YAML file
-e = Extractor.from_yaml_file('search_results.yml')
+e = Extractor.from_yaml_file('flask-server\\dataload\\search_results.yml')
+
+#######################################################################################
 
 def __drop_master_table(cursor):
     cursor.execute('DROP TABLE IF EXISTS consumer_products_master')
+
+#######################################################################################
 
 def __create_master_table(create):
     if create:
         connection = db.get_db()
         cursor = connection.cursor()
         __drop_master_table(cursor)
-        cursor.execute('CREATE TABLE consumer_products_master(title TEXT, url TEXT, rating TEXT, reviews INTEGER, price REAL, search_url TEXT)')
+        cursor.execute('CREATE TABLE consumer_products_master(category TEXT, title TEXT, url TEXT, rating TEXT, reviews INTEGER, price REAL, search_url TEXT, description TEXT)')
         cursor.close()
         connection.close()
 
-def __insert_master_record(cursor, title, url, rating, reviews, price, search_url):
-    cursor.execute(
-        'INSERT OR REPLACE INTO consumer_products_master (title, url, rating, reviews, price, search_url) VALUES(?, ?, ?, ?, ?, ?)',
-        (title, url, rating, reviews, price, search_url))
+#######################################################################################
 
+def __insert_master_record(cursor, category, title, url, rating, reviews, price, search_url, description):
+    cursor.execute(
+        'INSERT OR REPLACE INTO consumer_products_master (category, title, url, rating, reviews, price, search_url, description) VALUES(?, ?, ?, ?, ?, ?, ?, ?)',
+        (category, title, url, rating, reviews, price, search_url, description))
+
+#######################################################################################
 
 def scrape(url):  
 
@@ -53,25 +60,54 @@ def scrape(url):
             print("Page %s must have been blocked by Amazon as the status code was %d"%(url,r.status_code))
         return None
     # Pass the HTML of the page and create 
-    return e.extract(r.text)
+    product_details =  e.extract(r.text)
+    for product in product_details['products']:
+        description_url = product['url']
+        description = __get_product_description("https://www.amazon.com/" + description_url, headers)
+        sleep(60)
+        product.update({"description": description})
+    
+    return product_details
 
-# product_data = []
+#######################################################################################
+
+def __get_product_description(description_url, headers):
+    try:
+        r = requests.get(description_url, headers=headers)
+        soup = BeautifulSoup(r.content, "html.parser")
+        product_description = ""
+        lis = []
+        description = soup.find("div", {"id" : "featurebullets_feature_div"})
+        if description:
+            ul = description.find('ul')
+            if ul:
+                lis = ul.findAll('li')
+            for li in lis:
+                product_description += li.text.strip() + '. '
+            return product_description
+        return None
+    except:
+        pass
+
+#######################################################################################
+
 connection = db.get_db()
 cursor = connection.cursor()
-__create_master_table(True)
-with open("search_results_urls.txt",'r') as urllist, open('search_results_output.jsonl','w') as outfile:
+__create_master_table(False)
+with open("flask-server\\dataload\\search_results_urls.txt",'r') as urllist, open('flask-server\\dataload\\search_results_output.jsonl','w') as outfile:
     for url in urllist.read().splitlines():
-        data = scrape(url) 
+        category = url[27:]
+        data = scrape(url)
         if data:
             for product in data['products']:
                 product['search_url'] = url
-                # print("Saving Product: %s"%product['title'])
                 json.dump(product,outfile)
                 outfile.write("\n")
                 #insert data
-                __insert_master_record(cursor, product['title'], product['url'], product['rating'], product['reviews'], product['price'], product['search_url'])
-                #sleep(10)
+                __insert_master_record(cursor, category, product['title'], product['url'], product['rating'], product['reviews'], product['price'], product['search_url'], product['description'])
 connection.commit()
 cursor.close()
 connection.close()
+
+#######################################################################################
     

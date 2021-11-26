@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-db_file_path = '../db/intellireco1.db'
+db_file_path = '../db/intellireco2.db'
 
 def __connect_db__():
     """Connect to the specific database."""

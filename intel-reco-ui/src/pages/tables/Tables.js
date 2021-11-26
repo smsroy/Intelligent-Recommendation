@@ -42,8 +42,12 @@ const categories = [
     label: "electronics",
   },
   {
-    value: "Ipads",
-    label: "ipads",
+    value: "ipad",
+    label: "ipad",
+  },
+  {
+    value: "hoodies",
+    label: "hoodies",
   },
   {
     value: "TV",
@@ -65,24 +69,49 @@ export default function Tables() {
   const [datatableData, setDatatableData] = useState([{}]);
   const classes = useStyles();
 
-  const [keywords, setKeywords] = React.useState(" ");
+  const [keywords, setKeywords] = React.useState("");
   const handleKWChange = (event) => {
     setKeywords(event.target.value);
   };
 
-  const [category, setCategory] = React.useState("electronics");
+  const [category, setCategory] = React.useState("");
   const handleChange = (event) => {
     setCategory(event.target.value);
   };
 
-  useEffect(() => {
-    fetch("/search-result-queryarr")
-      .then((res) => res.json())
-      .then((data) => {
-        setDatatableData(data);
-        console.log(data);
-      });
-  }, []);
+  const searchProducts = async (e) => {
+    try {
+      const result = await search(keywords, category);
+
+      if (result) {
+        setDatatableData(result);
+        console.log(result);
+      }
+    }
+    catch (error) {
+
+    }
+  }
+
+  const search = async (keywords, category) => {
+    try {
+      const result = await fetch(`/search-result-queryarr/${keywords}/${category}`)
+      .then(res => res.json());
+      console.log(result);
+      return result;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  // useEffect(() => {
+  //   fetch("/search-result-queryarr")
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setDatatableData(data);
+  //       console.log(data);
+  //     });
+  // }, []);
 
   return (
     <>
@@ -125,7 +154,7 @@ export default function Tables() {
                   </MenuItem>
                 ))}
               </TextField>
-              <Button variant="outlined">Get Recommendation</Button>
+              <Button variant="contained" color="primary" onClick={searchProducts}>Recommend</Button>
             </Box>
           </Widget>
         </Grid>
