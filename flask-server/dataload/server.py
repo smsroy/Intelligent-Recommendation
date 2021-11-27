@@ -8,12 +8,13 @@ import json
 app = Flask(__name__)
 
 class Result(object):
-    def __init__(self, priority, url, rating, title, price):
+    def __init__(self, priority, url, rating, title, price, reviews):
         self.priority = priority
         self.url = url
         self.rating = rating
         self.title = title
         self.price = price
+        self.reviews = reviews
         return
 
     def __lt__(self, other):
@@ -58,7 +59,7 @@ def __get_ranked_products(keywords, category):
     for product in product_listings:
         if product['description']:
             product_description = product['description'] + "Product Title: " + product['title']
-            q.put(Result(cal.get_sim(keywords, product_description), product['url'], product['rating'], product['title'], product['price']))
+            q.put(Result(cal.get_sim(keywords, product_description), product['url'], product['rating'], product['title'], product['price'], product['reviews']))
     result = []
     for i in range(0, len(q.queue)):
         result.append(q.get())
