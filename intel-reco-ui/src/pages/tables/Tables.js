@@ -97,7 +97,7 @@ export default function Tables() {
       field: "title",
     },
     {
-      name: "Rating",
+      name: "Rating (Out of 5)",
       field: "rating",
     },
     {
@@ -113,9 +113,9 @@ export default function Tables() {
       field: "url",
       options: {
         filter: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
+        customBodyRender: (value) => {
           return (
-            <a href={value}>open link</a>
+            <a href={"https://www.amazon.com" + value}>open link</a>
           );
         }
       }
@@ -178,7 +178,6 @@ export default function Tables() {
                <TextField 
                 className={classes.field}
                 required
-                
                 id="select-category"
                 select
                 label="Category"
@@ -195,6 +194,7 @@ export default function Tables() {
                 ))}
               </TextField>
               <TextField
+                style={{marginLeft: '50px', width: '500px'}}
                 className={classes.field}
                 required
                 id="key-words"
@@ -219,7 +219,8 @@ export default function Tables() {
             data={datatableData}
             columns={columns}
             options={{
-              filterType: "checkbox",
+              selectableRows: false,
+              filterType: "checkbox"
             }}
           />
           </MuiThemeProvider>
