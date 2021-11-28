@@ -38,8 +38,8 @@ import mock from "../dashboard/mock";
 
 const categories = [
   {
-    value: "Electronics",
-    label: "electronics",
+    value: "Laptop",
+    label: "laptop",
   },
   {
     value: "ipad",
@@ -63,6 +63,16 @@ const useStyles = makeStyles((theme) => ({
   tableOverflow: {
     overflow: "auto",
   },
+  field: {
+    marginTop: 20,
+    marginBottom: 20,
+    alignSelf: 'flex-end'
+  },
+  root: {
+    justifyContent: 'center'
+}
+
+
 }));
 
 export default function Tables() {
@@ -115,35 +125,32 @@ export default function Tables() {
 
   return (
     <>
-      <PageTitle title="Recommendation" />
-      <Grid container spacing={4}>
-        <Grid item xs={12}>
+      <PageTitle title="Discover Recommended Products" />
+      <Grid container spacing={4} justify="center" className="App">
+        <Grid item xs={12} >
           <Widget
-            title="Product Recommendation Search"
+            title="Search by Product Category"
             upperTitle
             noBodyPadding
             bodyClass={classes.tableOverflow}
           >
-            <Box
+            <Box pl={2} pr={2} pb={1} pt={1}
               component="form"
               sx={{
                 "& > :not(style)": { m: 1, width: "25ch" },
               }}
               noValidate
               autoComplete="off"
-            >
-              <TextField
-                id="key-words"
-                label="Product Keywords"
-                multiline
-                maxRows={4}
-                value={keywords}
-                onChange={handleKWChange}
-              />
-              <TextField
+            >  
+               <TextField 
+                className={classes.field}
+                required
+                
                 id="select-category"
                 select
                 label="Category"
+                color="primary"
+                variant="outlined"
                 value={category}
                 onChange={handleChange}
                 helperText="Please select product category"
@@ -154,7 +161,20 @@ export default function Tables() {
                   </MenuItem>
                 ))}
               </TextField>
-              <Button variant="contained" color="primary" onClick={searchProducts}>Recommend</Button>
+              <TextField
+                className={classes.field}
+                required
+                id="key-words"
+                label="Product Keywords"
+                multiline
+                maxRows={4}
+                color="primary"
+                variant="outlined"
+                value={keywords}
+                onChange={handleKWChange}
+                helperText="Please enter keywords"
+              />
+             <Grid> <Button variant="contained" color="primary" onClick={searchProducts}>Recommend</Button> </Grid>
             </Box>
           </Widget>
         </Grid>
