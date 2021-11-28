@@ -38,8 +38,8 @@ import mock from "../dashboard/mock";
 
 const categories = [
   {
-    value: "Laptop",
-    label: "laptop",
+    value: "Electronics",
+    label: "electronics",
   },
   {
     value: "ipad",
@@ -126,7 +126,7 @@ export default function Tables() {
   return (
     <>
       <PageTitle title="Discover Recommended Products" />
-      <Grid container spacing={4} justify="center" className="App">
+      <Grid container spacing={4} justify="center">
         <Grid item xs={12} >
           <Widget
             title="Search by Product Category"
@@ -134,7 +134,7 @@ export default function Tables() {
             noBodyPadding
             bodyClass={classes.tableOverflow}
           >
-            <Box pl={2} pr={2} pb={1} pt={1}
+            <Box m={3} pl={2} pr={2} pb={1} pt={1}
               component="form"
               sx={{
                 "& > :not(style)": { m: 1, width: "25ch" },
@@ -174,7 +174,8 @@ export default function Tables() {
                 onChange={handleKWChange}
                 helperText="Please enter keywords"
               />
-             <Grid> <Button variant="contained" color="primary" onClick={searchProducts}>Recommend</Button> </Grid>
+             <Grid> <Button variant="contained" color="primary" onClick={searchProducts}>Recommend</Button></Grid>
+              
             </Box>
           </Widget>
         </Grid>
