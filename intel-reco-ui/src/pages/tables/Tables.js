@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 // import React from "react";
 import { Grid } from "@material-ui/core";
+import { MuiThemeProvider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import MUIDataTable from "mui-datatables";
 import Box from "@material-ui/core/Box";
@@ -38,8 +39,8 @@ import mock from "../dashboard/mock";
 
 const categories = [
   {
-    value: "Electronics",
-    label: "electronics",
+    value: "Laptop",
+    label: "laptop",
   },
   {
     value: "ipad",
@@ -58,6 +59,7 @@ const categories = [
     label: "cellphones",
   },
 ];
+
 
 const useStyles = makeStyles((theme) => ({
   tableOverflow: {
@@ -88,6 +90,37 @@ export default function Tables() {
   const handleChange = (event) => {
     setCategory(event.target.value);
   };
+
+  const columns = [
+    {
+      name: "Title",
+      field: "title",
+    },
+    {
+      name: "Rating",
+      field: "rating",
+    },
+    {
+      name: "Reviews",
+      field: "reviews",
+    },
+    {
+      name: "Price",
+      field: "price",
+    },
+    { 
+      name: "Url",
+      field: "url",
+      options: {
+        filter: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <a href={value}>open link</a>
+          );
+        }
+      }
+    },      
+  ];
 
   const searchProducts = async (e) => {
     try {
@@ -180,14 +213,16 @@ export default function Tables() {
           </Widget>
         </Grid>
         <Grid item xs={12}>
+        <MuiThemeProvider>
           <MUIDataTable
             title="Recommendation List"
             data={datatableData}
-            columns={["Title", "Rating", "Reviews", "Price", "Url"]}
+            columns={columns}
             options={{
               filterType: "checkbox",
             }}
           />
+          </MuiThemeProvider>
         </Grid>
       </Grid>
     </>

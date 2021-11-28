@@ -64,6 +64,9 @@ def __get_ranked_products(keywords, category):
     for i in range(0, len(q.queue)):
         result.append(q.get())
     
+    hyperlink_format = '<a href="{link}">{text}</a>'
+    link_text = hyperlink_format.format
+    
     result_arr = []
     for row in result:
         resarr = []
@@ -71,7 +74,7 @@ def __get_ranked_products(keywords, category):
         resarr.append(row.rating)
         resarr.append(row.reviews)
         resarr.append(row.price)
-        resarr.append("open link")
+        resarr.append(row.url)
         result_arr.append(resarr)
     print("result_arr",result_arr)
     return json.dumps(result_arr)
