@@ -64,14 +64,18 @@ def __get_ranked_products(keywords, category):
     for i in range(0, len(q.queue)):
         result.append(q.get())
     
+   
     result_arr = []
     for row in result:
         resarr = []
         resarr.append(row.title)
-        resarr.append(row.rating)
+        if(row.rating):
+            resarr.append(row.rating[:3])
+        else:
+            resarr.append(row.rating)
         resarr.append(row.reviews)
         resarr.append(row.price)
-        resarr.append("open link")
+        resarr.append(row.url)
         result_arr.append(resarr)
     print("result_arr",result_arr)
     return json.dumps(result_arr)
