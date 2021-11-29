@@ -60,7 +60,6 @@ const categories = [
   },
 ];
 
-
 const useStyles = makeStyles((theme) => ({
   tableOverflow: {
     overflow: "auto",
@@ -68,13 +67,11 @@ const useStyles = makeStyles((theme) => ({
   field: {
     marginTop: 20,
     marginBottom: 20,
-    alignSelf: 'flex-end'
+    alignSelf: "flex-end",
   },
   root: {
-    justifyContent: 'center'
-}
-
-
+    justifyContent: "center",
+  },
 }));
 
 export default function Tables() {
@@ -108,18 +105,20 @@ export default function Tables() {
       name: "Price",
       field: "price",
     },
-    { 
+    {
       name: "Url",
       field: "url",
       options: {
         filter: false,
         customBodyRender: (value) => {
           return (
-            <a href={"https://www.amazon.com" + value}>open link</a>
+            <a href={"https://www.amazon.com" + value} target="_blank">
+              open link
+            </a>
           );
-        }
-      }
-    },      
+        },
+      },
+    },
   ];
 
   const searchProducts = async (e) => {
@@ -130,22 +129,20 @@ export default function Tables() {
         setDatatableData(result);
         console.log(result);
       }
-    }
-    catch (error) {
-
-    }
-  }
+    } catch (error) {}
+  };
 
   const search = async (keywords, category) => {
     try {
-      const result = await fetch(`/search-result-queryarr/${keywords}/${category}`)
-      .then(res => res.json());
+      const result = await fetch(
+        `/search-result-queryarr/${keywords}/${category}`,
+      ).then((res) => res.json());
       console.log(result);
       return result;
     } catch (error) {
       throw new Error(error.message);
     }
-  }
+  };
 
   // useEffect(() => {
   //   fetch("/search-result-queryarr")
@@ -160,22 +157,27 @@ export default function Tables() {
     <>
       <PageTitle title="Discover Recommended Products" />
       <Grid container spacing={4} justify="center">
-        <Grid item xs={12} >
+        <Grid item xs={12}>
           <Widget
             title="Search by Product Category"
             upperTitle
             noBodyPadding
             bodyClass={classes.tableOverflow}
           >
-            <Box m={3} pl={2} pr={2} pb={1} pt={1}
+            <Box
+              m={3}
+              pl={2}
+              pr={2}
+              pb={1}
+              pt={1}
               component="form"
               sx={{
                 "& > :not(style)": { m: 1, width: "25ch" },
               }}
               noValidate
               autoComplete="off"
-            >  
-               <TextField 
+            >
+              <TextField
                 className={classes.field}
                 required
                 id="select-category"
@@ -194,7 +196,7 @@ export default function Tables() {
                 ))}
               </TextField>
               <TextField
-                style={{marginLeft: '50px', width: '500px'}}
+                style={{ marginLeft: "50px", width: "500px" }}
                 className={classes.field}
                 required
                 id="key-words"
@@ -207,22 +209,30 @@ export default function Tables() {
                 onChange={handleKWChange}
                 helperText="Please enter keywords"
               />
-             <Grid> <Button variant="contained" color="primary" onClick={searchProducts}>Recommend</Button></Grid>
-              
+              <Grid>
+                {" "}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={searchProducts}
+                >
+                  Recommend
+                </Button>
+              </Grid>
             </Box>
           </Widget>
         </Grid>
         <Grid item xs={12}>
-        <MuiThemeProvider>
-          <MUIDataTable
-            title="Recommendation List"
-            data={datatableData}
-            columns={columns}
-            options={{
-              selectableRows: false,
-              filterType: "checkbox"
-            }}
-          />
+          <MuiThemeProvider>
+            <MUIDataTable
+              title="Recommendation List"
+              data={datatableData}
+              columns={columns}
+              options={{
+                selectableRows: false,
+                filterType: "checkbox",
+              }}
+            />
           </MuiThemeProvider>
         </Grid>
       </Grid>
