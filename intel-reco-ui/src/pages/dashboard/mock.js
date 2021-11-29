@@ -118,13 +118,6 @@ const mock = {
       icon: "cog",
       color: "light",
       content: 'New <span className="fw-semi-bold">Version</span> of RNS app'
-    },
-    {
-      id: 5,
-      icon: "bell",
-      color: "info",
-      content:
-        '15 <span className="fw-semi-bold">Notifications</span> from Social Apps'
     }
   ],
   table: [

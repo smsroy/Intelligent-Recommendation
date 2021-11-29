@@ -25,7 +25,6 @@ import useStyles from "./styles";
 
 // components
 import { Badge, Typography, Button } from "../Wrappers";
-import Notification from "../Notification/Notification";
 import UserAvatar from "../UserAvatar/UserAvatar";
 
 // context
@@ -218,7 +217,6 @@ export default function Header(props) {
               onClick={() => setNotificationsMenu(null)}
               className={classes.headerMenuItem}
             >
-              <Notification {...notification} typographyVariant="inherit" />
             </MenuItem>
           ))}
         </Menu>
