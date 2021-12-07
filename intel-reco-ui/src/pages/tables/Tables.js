@@ -39,25 +39,53 @@ import mock from "../dashboard/mock";
 
 const categories = [
   {
-    value: "Laptop",
+    value: "laptop",
     label: "laptop",
-  },
-  {
-    value: "ipad",
-    label: "ipad",
   },
   {
     value: "hoodies",
     label: "hoodies",
   },
   {
-    value: "TV",
-    label: "tv",
+    value: "ipad",
+    label: "ipad",
   },
   {
-    value: "Cellphones",
-    label: "cellphones",
+    value: "television",
+    label: "television",
   },
+  {
+    value: "camera",
+    label: "camera",
+  },
+  {
+    value: "cellphone",
+    label: "cellphone",
+  },
+  {
+    value: "drone",
+    label: "drone",
+  },
+  {
+    value: "smartwatch",
+    label: "smartwatch",
+  },
+  {
+    value: "monitor",
+    label: "monitor",
+  },
+  {
+    value: "guitar",
+    label: "guitar",
+  },
+  {
+    value: "headphone",
+    label: "headphone",
+  },
+  {
+    value: "speaker",
+    label: "speaker",
+  }
 ];
 
 const useStyles = makeStyles((theme) => ({
