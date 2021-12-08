@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Chart from "react-google-charts";
 import {
   Grid,
@@ -49,6 +49,68 @@ export default function Dashboard(props) {
 
   // local
   var [mainChartState, setMainChartState] = useState("monthly");
+  const [statsData, setStatsData] = useState([{}]);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [totalCategories, setTotalCategories] = useState(0);
+  // const [loaded, setLoaded] = useState(0);
+
+  // const statsData = [
+  //   ["Category", "By No Of Products"],
+  //   ["Laptop", 110],
+  //   ["hoodies", 200],
+  //   ["Ipad", 20],
+  //   ["Television", 29],
+  // ["Camera", 70],
+  // ["Cellphone", 110],
+  // ["Drone", 50],
+  // ["Smartwatch", 40],
+  // ["Monitor", 35],
+  // ["Guitar", 44],
+  // ["Headphone", 60],
+  // ["Speaker", 70],
+  // ];
+
+  const productStats = async (e) => {
+    try {
+      const result = await searchStats();
+      let statData = [];
+      let prCount = 0;
+      let catCount = 0;
+      const hdr = ["Category", "By No Of Products"];
+      statData.push(hdr);
+      if (result) {
+        result.forEach((element) => {
+          let arr = [];
+          catCount++;
+          arr.push(element[0]);
+          arr.push(element[1]);
+          prCount = prCount + element[1];
+          statData.push(arr);
+        });
+        setStatsData(statData);
+        setTotalProducts(prCount);
+        setTotalCategories(catCount);
+        // setLoaded(1);
+        //console.log(statData);
+      }
+    } catch (error) {}
+  };
+
+  const searchStats = async () => {
+    try {
+      const result = await fetch(`/search-result-stats`).then((res) =>
+        res.json(),
+      );
+      return result;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    console.log("UseEffect Called");
+    productStats();
+  }, []);
 
   return (
     <>
@@ -67,21 +129,7 @@ export default function Dashboard(props) {
                 height={"400px"}
                 chartType="PieChart"
                 loader={<div>Loading Chart</div>}
-                data={[
-                  ["Category", "By No Of Products"],
-                  ["Laptop", 110],
-                  ["hoodies", 200],
-                  ["Ipad", 20],
-                  ["Television", 29],
-                  ["Camera", 70],
-                  ["Cellphone", 110],
-                  ["Drone", 50],
-                  ["Smartwatch", 40],
-                  ["Monitor", 35],
-                  ["Guitar", 44],
-                  ["Headphone", 60],
-                  ["Speaker", 70],
-                ]}
+                data={statsData}
                 options={{
                   title: "By Number of Products",
                   // Just add this option
@@ -98,19 +146,19 @@ export default function Dashboard(props) {
             >
               <Grid item xs={4}>
                 <Typography color="text" colorBrightness="secondary" noWrap>
-                  Total Products
+                  Total Products #
                 </Typography>
-                <Typography size="md">860</Typography>
+                <Typography size="md">{totalProducts}</Typography>
               </Grid>
               <Grid item xs={4}>
                 <Typography color="text" colorBrightness="secondary" noWrap>
-                  Categories
+                  Categories #
                 </Typography>
-                <Typography size="md">12</Typography>
+                <Typography size="md">{totalCategories}</Typography>
               </Grid>
               <Grid item xs={4}>
                 <Typography color="text" colorBrightness="secondary" noWrap>
-                  No Of Reco
+                  Default Reco #
                 </Typography>
                 <Typography size="md">10</Typography>
               </Grid>

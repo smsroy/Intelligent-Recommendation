@@ -32,12 +32,27 @@ def reco():
     return {"reco": ["Samsung", "Sony", "Westin"]}
 
 # Api Route
+@app.route("/search-result-stats", methods=['GET'])
+def searchResultStats():
+    searchQ = srq()
+    result = searchQ.get_data_stats()
+    result_arr = []
+    for row in result:
+        resarr = []
+        resarr.append(row['category'])
+        resarr.append(row['count'])
+        result_arr.append(resarr)   
+    searchQ.close()
+    # print('result_arr', result_arr)
+    return json.dumps(result_arr)
+
+# Api Route
 @app.route("/search-result-query")
 def searchResultQuery():
     searchQ = srq()
-    result = searchQ.get_master_data()
+    result = searchQ.get_data_stats()
     searchQ.close()
-    print('result', result)
+    #print('result', result)
     return jsonify({'space': result})
 
 # Api Route
@@ -46,8 +61,8 @@ def searchResultQueryArr(keywords, category):
     result = __get_ranked_products(keywords, category)
     # searchQ = srq()
     # result = searchQ.get_master_data_arr()
-    # searchQ.close()
-    print('result', result)
+    searchQ.close()
+    # print('result', result)
     return result
   
 
@@ -77,7 +92,7 @@ def __get_ranked_products(keywords, category):
         resarr.append(row.price)
         resarr.append(row.url)
         result_arr.append(resarr)
-    print("result_arr",result_arr)
+    #print("result_arr",result_arr)
     return json.dumps(result_arr)
 
 if __name__ == "__main__":
