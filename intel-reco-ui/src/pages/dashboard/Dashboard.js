@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import Chart from "react-google-charts";
 import {
   Grid,
   LinearProgress,
   Select,
   OutlinedInput,
   MenuItem,
-  Button
+  Button,
 } from "@material-ui/core";
 import { useTheme } from "@material-ui/styles";
 import {
@@ -51,50 +52,43 @@ export default function Dashboard(props) {
 
   return (
     <>
-      <PageTitle title="Dashboard" button={<Button
-      variant="contained"
-      size="medium"
-      color="secondary"
-    >
-        Latest Reports
-    </Button>} />
+      <PageTitle title="Dashboard" />
       <Grid container spacing={4}>
-        <Grid item lg={3} md={4} sm={6} xs={12}>
+        <Grid item lg={6} md={4} sm={6} xs={12}>
           <Widget
-            title="Visits Today"
+            title="Categories Overview"
             upperTitle
             bodyClass={classes.fullHeightBody}
             className={classes.card}
           >
             <div className={classes.visitsNumberContainer}>
-              <Grid container item alignItems={"center"}>
-                <Grid item xs={6}>
-              <Typography size="xl" weight="medium" noWrap>
-                12, 678
-              </Typography>
-                </Grid>
-                <Grid item xs={6}>
-              <LineChart
-                width={100}
-                height={30}
+              <Chart
+                width={"600px"}
+                height={"400px"}
+                chartType="PieChart"
+                loader={<div>Loading Chart</div>}
                 data={[
-                  { value: 10 },
-                  { value: 15 },
-                  { value: 10 },
-                  { value: 17 },
-                  { value: 18 },
+                  ["Category", "By No Of Products"],
+                  ["Laptop", 110],
+                  ["hoodies", 200],
+                  ["Ipad", 20],
+                  ["Television", 29],
+                  ["Camera", 70],
+                  ["Cellphone", 110],
+                  ["Drone", 50],
+                  ["Smartwatch", 40],
+                  ["Monitor", 35],
+                  ["Guitar", 44],
+                  ["Headphone", 60],
+                  ["Speaker", 70],
                 ]}
-              >
-                <Line
-                  type="natural"
-                  dataKey="value"
-                  stroke={theme.palette.success.main}
-                  strokeWidth={2}
-                  dot={false}
-                />
-              </LineChart>
-                </Grid>
-              </Grid>
+                options={{
+                  title: "By Number of Products",
+                  // Just add this option
+                  is3D: true,
+                }}
+                rootProps={{ "data-testid": "2" }}
+              />
             </div>
             <Grid
               container
@@ -104,86 +98,23 @@ export default function Dashboard(props) {
             >
               <Grid item xs={4}>
                 <Typography color="text" colorBrightness="secondary" noWrap>
-                  Registrations
+                  Total Products
                 </Typography>
                 <Typography size="md">860</Typography>
               </Grid>
               <Grid item xs={4}>
                 <Typography color="text" colorBrightness="secondary" noWrap>
-                  Sign Out
+                  Categories
                 </Typography>
-                <Typography size="md">32</Typography>
+                <Typography size="md">12</Typography>
               </Grid>
               <Grid item xs={4}>
                 <Typography color="text" colorBrightness="secondary" noWrap>
-                  Rate
+                  No Of Reco
                 </Typography>
-                <Typography size="md">3.25%</Typography>
+                <Typography size="md">10</Typography>
               </Grid>
             </Grid>
-          </Widget>
-        </Grid>
-        <Grid item lg={3} md={8} sm={6} xs={12}>
-          <Widget
-            title="App Performance"
-            upperTitle
-            className={classes.card}
-            bodyClass={classes.fullHeightBody}
-          >
-            <div className={classes.performanceLegendWrapper}>
-              <div className={classes.legendElement}>
-                <Dot color="warning" />
-                <Typography
-                  color="text"
-                  colorBrightness="secondary"
-                  className={classes.legendElementText}
-                >
-                  Integration
-                </Typography>
-              </div>
-              <div className={classes.legendElement}>
-                <Dot color="primary" />
-                <Typography
-                  color="text"
-                  colorBrightness="secondary"
-                  className={classes.legendElementText}
-                >
-                  SDK
-                </Typography>
-              </div>
-            </div>
-            <div className={classes.progressSection}>
-              <Typography
-                size="md"
-                color="text"
-                colorBrightness="secondary"
-                className={classes.progressSectionTitle}
-              >
-                Integration
-              </Typography>
-              <LinearProgress
-                variant="determinate"
-                value={77}
-                classes={{ barColorPrimary: classes.progressBarPrimary }}
-                className={classes.progress}
-              />
-            </div>
-            <div>
-              <Typography
-                size="md"
-                color="text"
-                colorBrightness="secondary"
-                className={classes.progressSectionTitle}
-              >
-                SDK
-              </Typography>
-              <LinearProgress
-                variant="determinate"
-                value={73}
-                classes={{ barColorPrimary: classes.progressBarWarning }}
-                className={classes.progress}
-              />
-            </div>
           </Widget>
         </Grid>
         <Grid item lg={3} md={8} sm={6} xs={12}>
@@ -294,7 +225,9 @@ export default function Dashboard(props) {
                   {PieChartData.map(({ name, value, color }, index) => (
                     <div key={color} className={classes.legendItemContainer}>
                       <Dot color={color} />
-                      <Typography style={{ whiteSpace: "nowrap", fontSize: 12 }} >
+                      <Typography
+                        style={{ whiteSpace: "nowrap", fontSize: 12 }}
+                      >
                         &nbsp;{name}&nbsp;
                       </Typography>
                       <Typography color="text" colorBrightness="secondary">
@@ -341,7 +274,7 @@ export default function Dashboard(props) {
                 </div>
                 <Select
                   value={mainChartState}
-                  onChange={e => setMainChartState(e.target.value)}
+                  onChange={(e) => setMainChartState(e.target.value)}
                   input={
                     <OutlinedInput
                       labelWidth={0}
@@ -372,7 +305,7 @@ export default function Dashboard(props) {
                   tickLine={false}
                 />
                 <XAxis
-                  tickFormatter={i => i + 1}
+                  tickFormatter={(i) => i + 1}
                   tick={{ fill: theme.palette.text.hint + "80", fontSize: 14 }}
                   stroke={theme.palette.text.hint + "80"}
                   tickLine={false}
@@ -405,21 +338,6 @@ export default function Dashboard(props) {
                 />
               </ComposedChart>
             </ResponsiveContainer>
-          </Widget>
-        </Grid>
-        {mock.bigStat.map(stat => (
-          <Grid item md={4} sm={6} xs={12} key={stat.product}>
-            <BigStat {...stat} />
-          </Grid>
-        ))}
-        <Grid item xs={12}>
-          <Widget
-            title="Support Requests"
-            upperTitle
-            noBodyPadding
-            bodyClass={classes.tableWidget}
-          >
-            <Table data={mock.table} />
           </Widget>
         </Grid>
       </Grid>
