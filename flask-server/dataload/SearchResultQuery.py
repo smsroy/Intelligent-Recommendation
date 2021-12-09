@@ -31,7 +31,7 @@ class SearchResultQuery:
         return jsonData_list
 
     def get_master_data_arr(self, category):
-        cursor = self.connection.execute('SELECT title, url, rating, reviews, price, search_url, description FROM consumer_products_master WHERE category=\'%s\''
+        cursor = self.connection.execute('SELECT title, url, rating, reviews, price, search_url, description FROM consumer_products_master WHERE category=\'%s\' ORDER BY title '
         % (category))
         result = cursor.fetchall()
         cursor.close()
@@ -52,6 +52,13 @@ class SearchResultQuery:
 
     def get_data_stats(self):
         cursor = self.connection.execute('SELECT category, count(*) as count from consumer_products_master GROUP BY category ORDER BY 1')
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+
+    def get_product_desc(self, category):
+        cursor = self.connection.execute('SELECT category, description from consumer_products_master WHERE category=\'%s\''
+        % (category))
         result = cursor.fetchall()
         cursor.close()
         return result
