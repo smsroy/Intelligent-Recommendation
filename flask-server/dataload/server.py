@@ -49,7 +49,7 @@ def searchResultQueryArr(keywords, category):
     result = __get_ranked_products(keywords, category)
     # searchQ = srq()
     # result = searchQ.get_master_data_arr()
-    searchQ.close()
+    # searchQ.close()
     # print('result', result)
     return result
   

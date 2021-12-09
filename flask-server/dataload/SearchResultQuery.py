@@ -51,7 +51,7 @@ class SearchResultQuery:
         # return json.dumps(result_arr)
 
     def get_data_stats(self):
-        cursor = self.connection.execute('SELECT category, count(*) as count from consumer_products_master GROUP BY category ORDER BY 1')
+        cursor = self.connection.execute('SELECT category, count(*) as count from consumer_products_master GROUP BY category')
         result = cursor.fetchall()
         cursor.close()
         return result
